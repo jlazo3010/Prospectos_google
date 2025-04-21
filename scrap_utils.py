@@ -17,11 +17,14 @@ def iniciar_driver():
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
     chrome_options.add_experimental_option("useAutomationExtension", False)
 
-    # Especifica la ubicación del binario de Chromium (puede variar según el entorno)
-    chrome_options.binary_location = "/usr/bin/chromium"  # Ruta común en Linux
+    # Fuerza la descarga de una versión de ChromeDriver compatible con Chrome 120
+    try:
+        service = Service(ChromeDriverManager(version="120.0.6099.224").install())
+    except Exception as e:
+        print(f"Error al descargar ChromeDriver versión específica: {e}")
+        # Intenta con la última versión si la específica falla
+        service = Service(ChromeDriverManager().install())
 
-    # webdriver-manager debería poder encontrar el ChromeDriver compatible con Chromium
-    service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver
     
