@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from scrap_utils import scrapear_busqueda
+from bs4 import BeautifulSoup
 
 st.set_page_config(page_title="Scraper de Google Maps", layout="wide")
 
