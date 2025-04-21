@@ -1,0 +1,6 @@
+pandas
+selenium
+requests
+geopy
+BeautifulSoup
+geopy
