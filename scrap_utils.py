@@ -36,7 +36,7 @@ def plus_code_to_coords(plus_code, api_key):
     else:
         return None, None
 
-def scrapear_busqueda(busqueda: str) -> pd.DataFrame:
+def scrapear_busqueda(busqueda: str, api_key: str) -> pd.DataFrame:
     driver = iniciar_driver()
     driver.get("https://www.google.com/maps")
     time.sleep(5)
@@ -104,7 +104,7 @@ def scrapear_busqueda(busqueda: str) -> pd.DataFrame:
                 plus_tag = profile_soup.find("button", {"data-item-id": "oloc"})
                 if plus_tag:
                     plus_code = plus_tag.text.strip()
-                    lat, lng = plus_code_to_coords(plus_code)
+                    lat, lng = plus_code_to_coords(plus_code, api_key)
 
                 try:
                     phone_tags = profile_soup.find_all("button", class_="CsEnBe")
