@@ -47,12 +47,12 @@ def plus_code_to_coords(plus_code, api_key):
 def scrapear_busqueda(busqueda: str, api_key: str) -> pd.DataFrame:
     driver = iniciar_driver()
     driver.get("https://www.google.com/maps")
-    time.sleep(5)
+    time.sleep(15)
 
     search_box = driver.find_element(By.ID, "searchboxinput")
     search_box.send_keys(busqueda)
     search_box.send_keys(Keys.ENTER)
-    time.sleep(10)
+    time.sleep(20)
 
     for _ in range(20):
         try:
