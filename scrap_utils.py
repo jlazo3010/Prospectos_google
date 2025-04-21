@@ -26,10 +26,11 @@ def iniciar_driver():
     driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver
 
-def plus_code_to_coords(plus_code):
-    url = f"https://maps.googleapis.com/maps/api/geocode/json?address={plus_code}&key={API_KEY}"
+def plus_code_to_coords(plus_code, api_key):
+    url = f"https://maps.googleapis.com/maps/api/geocode/json?address={plus_code}&key={api_key}"
     response = requests.get(url)
     data = response.json()
+    
     if data['status'] == 'OK':
         lat = data['results'][0]['geometry']['location']['lat']
         lng = data['results'][0]['geometry']['location']['lng']

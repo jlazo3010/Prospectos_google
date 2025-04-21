@@ -7,23 +7,19 @@ st.set_page_config(page_title="Scraper de Google Maps", layout="wide")
 st.title("📍 Scraper de negocios en Google Maps")
 st.markdown("Ingresa una búsqueda como: **'tienditas en Iztapalapa'**, **'dentistas en Guadalajara'**, etc.")
 
-# Entrada del usuario
-busqueda = st.text_input("🔎 Escribe tu búsqueda en Google Maps")
+api_key = st.text_input("🔑 Ingresa tu API Key de Google Maps", type="password")
+busqueda = st.text_input("🔎 Escribe tu búsqueda")
 
-# Botón para activar scraping
 if st.button("Buscar y extraer"):
-    if not busqueda:
-        st.warning("Escribe una búsqueda antes de continuar.")
+    if not busqueda or not api_key:
+        st.warning("Por favor, ingresa tanto una búsqueda como tu API Key.")
     else:
         with st.spinner("Obteniendo resultados... esto puede tardar unos minutos."):
             try:
-                df = scrapear_busqueda(busqueda)
+                df = scrapear_busqueda(busqueda, api_key=api_key)
                 st.success(f"Se extrajeron {len(df)} resultados.")
-                
-                # Mostrar DataFrame
                 st.dataframe(df)
 
-                # Descargar en CSV
                 csv = df.to_csv(index=False).encode("utf-8")
                 st.download_button(
                     label="⬇️ Descargar resultados en CSV",
@@ -31,6 +27,5 @@ if st.button("Buscar y extraer"):
                     file_name=f"{busqueda.replace(' ', '_')}.csv",
                     mime="text/csv"
                 )
-
             except Exception as e:
                 st.error(f"❌ Error: {e}")
