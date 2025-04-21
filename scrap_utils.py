@@ -18,12 +18,12 @@ def iniciar_driver():
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
     chrome_options.add_experimental_option("useAutomationExtension", False)
 
-    # Usar ChromeDriverManager y forzar la versión compatible
-    service = Service(ChromeDriverManager(version="120.0.6099.224").install())  # Asegura que se instale la versión 120 de ChromeDriver
+    # Usar ChromeDriverManager y forzar la versión correcta
+    service = Service(ChromeDriverManager().install())  # `install()` maneja la versión automáticamente
 
     # Inicializar el driver con las opciones y servicio
     driver = webdriver.Chrome(service=service, options=chrome_options)
-    
+
     return driver
 
 def plus_code_to_coords(plus_code, api_key):
