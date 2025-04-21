@@ -2,7 +2,4 @@ pandas
 selenium
 requests
 geopy
-BeautifulSoup
-geopy
-bs4
 beautifulsoup4
