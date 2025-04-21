@@ -18,8 +18,8 @@ def iniciar_driver():
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
     chrome_options.add_experimental_option("useAutomationExtension", False)
 
-    # Crear el servicio usando ChromeDriverManager
-    service = Service(ChromeDriverManager().install())  # Aquí no necesitamos especificar el tipo de Chrome
+    # Usar ChromeDriverManager y forzar la versión compatible
+    service = Service(ChromeDriverManager(version="120.0.6099.224").install())  # Asegura que se instale la versión 120 de ChromeDriver
 
     # Inicializar el driver con las opciones y servicio
     driver = webdriver.Chrome(service=service, options=chrome_options)
