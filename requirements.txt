@@ -1,7 +1,6 @@
-pandas
-requests
-geopy
-beautifulsoup4
-webdriver-manager
 streamlit
 selenium
+webdriver-manager
+pandas
+beautifulsoup4
+requests
