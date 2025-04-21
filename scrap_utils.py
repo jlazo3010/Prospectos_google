@@ -9,23 +9,22 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 
 def iniciar_driver():
-    # Configurar las opciones de Chrome
     chrome_options = Options()
-    chrome_options.add_argument("--headless")  # Ejecutar en segundo plano
-    chrome_options.add_argument("--no-sandbox")  # Deshabilitar sandboxing
-    chrome_options.add_argument("--disable-dev-shm-usage")  # Usar memoria compartida
-    chrome_options.add_argument("--start-maximized")  # Iniciar maximizado
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--start-maximized")
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
     chrome_options.add_experimental_option("useAutomationExtension", False)
 
-    # Usar ChromeDriverManager y forzar la versión correcta
-    service = Service(ChromeDriverManager().install())  # `install()` maneja la versión automáticamente
+    # Especifica la ubicación del binario de Chromium (puede variar según el entorno)
+    chrome_options.binary_location = "/usr/bin/chromium"  # Ruta común en Linux
 
-    # Inicializar el driver con las opciones y servicio
+    # webdriver-manager debería poder encontrar el ChromeDriver compatible con Chromium
+    service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
-
     return driver
-
+    
 def plus_code_to_coords(plus_code, api_key):
     url = f"https://maps.googleapis.com/maps/api/geocode/json?address={plus_code}&key={api_key}"
     response = requests.get(url)
