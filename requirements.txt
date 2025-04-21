@@ -1,6 +1,7 @@
 pandas
-selenium
 requests
 geopy
 beautifulsoup4
 webdriver-manager>=4.0.0
+streamlit
+seleniumbase
