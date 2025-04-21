@@ -7,8 +7,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome import ChromeType
 
 def iniciar_driver():
     # Configurar las opciones de Chrome
@@ -21,7 +19,7 @@ def iniciar_driver():
     chrome_options.add_experimental_option("useAutomationExtension", False)
 
     # Crear el servicio usando ChromeDriverManager
-    service = Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install())
+    service = Service(ChromeDriverManager().install())  # Aquí no necesitamos especificar el tipo de Chrome
 
     # Inicializar el driver con las opciones y servicio
     driver = webdriver.Chrome(service=service, options=chrome_options)
