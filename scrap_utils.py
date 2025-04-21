@@ -9,6 +9,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options  
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager 
 
 def iniciar_driver():
     chrome_options = Options()
@@ -18,9 +20,9 @@ def iniciar_driver():
     chrome_options.add_argument("--start-maximized")
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
     chrome_options.add_experimental_option("useAutomationExtension", False)
-    chrome_options.binary_location = "/usr/bin/chromium-browser"  # para Streamlit Cloud
 
-    service = Service("/usr/lib/chromium-browser/chromedriver")  # para Streamlit Cloud
+    # Usa el ChromeDriverManager para obtener el driver correcto
+    service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver
 
