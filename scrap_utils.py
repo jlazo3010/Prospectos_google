@@ -3,27 +3,29 @@ import json
 import pandas as pd
 import re
 import requests
-from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options  
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager 
+from selenium.webdriver.chrome import ChromeType
 
 def iniciar_driver():
+    # Configurar las opciones de Chrome
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--start-maximized")
+    chrome_options.add_argument("--headless")  # Ejecutar en segundo plano
+    chrome_options.add_argument("--no-sandbox")  # Deshabilitar sandboxing
+    chrome_options.add_argument("--disable-dev-shm-usage")  # Usar memoria compartida
+    chrome_options.add_argument("--start-maximized")  # Iniciar maximizado
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
     chrome_options.add_experimental_option("useAutomationExtension", False)
 
-    # Usa el ChromeDriverManager para obtener el driver correcto
-    service = Service(ChromeDriverManager().install())
+    # Crear el servicio usando ChromeDriverManager
+    service = Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install())
+
+    # Inicializar el driver con las opciones y servicio
     driver = webdriver.Chrome(service=service, options=chrome_options)
+    
     return driver
 
 def plus_code_to_coords(plus_code, api_key):
