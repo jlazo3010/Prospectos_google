@@ -3,10 +3,11 @@ import json
 import pandas as pd
 import re
 import requests
+import os
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.chrome import ChromeDriverManager # Ya no lo usaremos directamente para la descarga
 
 def iniciar_driver():
     chrome_options = Options()
@@ -16,15 +17,15 @@ def iniciar_driver():
     chrome_options.add_argument("--start-maximized")
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
     chrome_options.add_experimental_option("useAutomationExtension", False)
+    chrome_options.binary_location = "/usr/bin/chromium" # Mantenemos la ubicación del binario de Chromium
 
-    # Fuerza la descarga de una versión de ChromeDriver compatible con Chrome 120
-    try:
-        service = Service(ChromeDriverManager(version="120.0.6099.224").install())
-    except Exception as e:
-        print(f"Error al descargar ChromeDriver versión específica: {e}")
-        # Intenta con la última versión si la específica falla
-        service = Service(ChromeDriverManager().install())
+    # Obtiene la ruta absoluta al ChromeDriver en el repositorio
+    chromedriver_path = os.path.join(os.getcwd(), "chromedriver_bin", "chromedriver")
 
+    # Asegúrate de que el ChromeDriver tenga permisos de ejecución
+    os.chmod(chromedriver_path, 0o755)
+
+    service = Service(executable_path=chromedriver_path)
     driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver
     
