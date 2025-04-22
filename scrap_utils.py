@@ -54,13 +54,20 @@ def scrapear_busqueda(busqueda: str, api_key: str) -> pd.DataFrame:
         driver.quit()
         return []
 
-    for _ in range(20):
-        try:
-            scrollable_div = driver.find_element(By.XPATH, '//div[@role="feed"]')
-            driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", scrollable_div)
-            time.sleep(25)
-        except:
-            break
+    for i in range(40):
+    try:
+        scrollable_div = driver.find_element(By.XPATH, '//div[@role="feed"]')
+        driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", scrollable_div)
+        time.sleep(1.5)
+        
+        # Buscar botón de siguiente página
+        more_button = driver.find_element(By.XPATH, '//button[@aria-label="Más resultados"]')
+        if more_button:
+            print("➡️ Clic en 'Más resultados'")
+            more_button.click()
+            time.sleep(2)
+    except:
+        continue
 
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     cards = soup.find_all("div", class_="Nv2PK THOPZb CpccDe")
