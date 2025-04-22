@@ -1,32 +1,37 @@
 import streamlit as st
-import pandas as pd
-from scrap_utils import scrapear_busqueda
-from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+import os
+import time
 
-st.set_page_config(page_title="Scraper de Google Maps", layout="wide")
+def iniciar_driver():
+    chrome_options = Options()
+    chrome_options.add_argument("--headless=new")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.binary_location = "/usr/bin/chromium"
+    chromedriver_path = os.path.join(os.getcwd(), "chromedriver_bin", "chromedriver")
+    os.chmod(chromedriver_path, 0o755)
+    service = Service(executable_path=chromedriver_path)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+    return driver
 
-st.title("📍 Scraper de negocios en Google Maps")
-st.markdown("Ingresa una búsqueda como: **'tienditas en Iztapalapa'**, **'dentistas en Guadalajara'**, etc.")
+st.title("🧪 Test básico de carga de Google Maps")
 
-api_key = st.text_input("🔑 Ingresa tu API Key de Google Maps", type="password")
-busqueda = st.text_input("🔎 Escribe tu búsqueda")
+if st.button("Probar carga de Google Maps"):
+    try:
+        st.write("⏳ Iniciando navegador...")
+        driver = iniciar_driver()
+        st.write("✅ Navegador iniciado")
 
-if st.button("Buscar y extraer"):
-    if not busqueda or not api_key:
-        st.warning("Por favor, ingresa tanto una búsqueda como tu API Key.")
-    else:
-        with st.spinner("Obteniendo resultados... esto puede tardar unos minutos."):
-            try:
-                df = scrapear_busqueda(busqueda, api_key=api_key)
-                st.success(f"Se extrajeron {len(df)} resultados.")
-                st.dataframe(df)
+        driver.get("https://www.google.com/maps")
+        time.sleep(10)
 
-                csv = df.to_csv(index=False).encode("utf-8")
-                st.download_button(
-                    label="⬇️ Descargar resultados en CSV",
-                    data=csv,
-                    file_name=f"{busqueda.replace(' ', '_')}.csv",
-                    mime="text/csv"
-                )
-            except Exception as e:
-                st.error(f"❌ Error: {e}")
+        st.write("✅ Google Maps cargado (probablemente)")
+        page_title = driver.title
+        st.write(f"Título de la página: {page_title}")
+
+        driver.quit()
+    except Exception as e:
+        st.error(f"❌ Error al cargar Google Maps: {e}")
