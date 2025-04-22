@@ -17,17 +17,9 @@ def iniciar_driver():
     chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--start-maximized")
-    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    chrome_options.add_experimental_option("useAutomationExtension", False)
-    chrome_options.binary_location = "/usr/bin/chromium" # Mantenemos la ubicación del binario de Chromium
-
-    # Obtiene la ruta absoluta al ChromeDriver en el repositorio
+    chrome_options.binary_location = "/usr/bin/chromium"
     chromedriver_path = os.path.join(os.getcwd(), "chromedriver_bin", "chromedriver")
-
-    # Asegúrate de que el ChromeDriver tenga permisos de ejecución
     os.chmod(chromedriver_path, 0o755)
-
     service = Service(executable_path=chromedriver_path)
     driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver
@@ -72,6 +64,7 @@ def scrapear_busqueda(busqueda: str, api_key: str) -> pd.DataFrame:
 
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     cards = soup.find_all("div", class_="Nv2PK THOPZb CpccDe")
+    print(f"🔍 Se encontraron {len(cards)} tarjetas de negocios.")
     results = []
 
     for idx, card in enumerate(cards):
