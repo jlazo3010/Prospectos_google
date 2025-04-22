@@ -14,7 +14,7 @@ from bs4 import BeautifulSoup
 
 def iniciar_driver():
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--start-maximized")
@@ -46,13 +46,21 @@ def plus_code_to_coords(plus_code, api_key):
 
 def scrapear_busqueda(busqueda: str, api_key: str) -> pd.DataFrame:
     driver = iniciar_driver()
+    print("🔵 Driver iniciado")
     driver.get("https://www.google.com/maps")
     time.sleep(15)
-
-    search_box = driver.find_element(By.ID, "searchboxinput")
-    search_box.send_keys(busqueda)
-    search_box.send_keys(Keys.ENTER)
-    time.sleep(20)
+    print("🗺️ Google Maps cargado")
+    
+    try:
+        search_box = driver.find_element(By.ID, "searchboxinput")
+        search_box.send_keys(busqueda)
+        search_box.send_keys(Keys.ENTER)
+        time.sleep(15)
+        print("🔍 Búsqueda enviada")
+    except Exception as e:
+        print(f"❌ No se pudo enviar la búsqueda: {e}")
+        driver.quit()
+        return []
 
     for _ in range(20):
         try:
