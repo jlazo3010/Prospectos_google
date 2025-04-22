@@ -40,14 +40,14 @@ def scrapear_busqueda(busqueda: str, api_key: str) -> pd.DataFrame:
     driver = iniciar_driver()
     print("🔵 Driver iniciado")
     driver.get("https://www.google.com/maps")
-    time.sleep(15)
+    time.sleep(25)
     print("🗺️ Google Maps cargado")
     
     try:
         search_box = driver.find_element(By.ID, "searchboxinput")
         search_box.send_keys(busqueda)
         search_box.send_keys(Keys.ENTER)
-        time.sleep(15)
+        time.sleep(20)
         print("🔍 Búsqueda enviada")
     except Exception as e:
         print(f"❌ No se pudo enviar la búsqueda: {e}")
@@ -58,7 +58,7 @@ def scrapear_busqueda(busqueda: str, api_key: str) -> pd.DataFrame:
         try:
             scrollable_div = driver.find_element(By.XPATH, '//div[@role="feed"]')
             driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", scrollable_div)
-            time.sleep(2)
+            time.sleep(25)
         except:
             break
 
