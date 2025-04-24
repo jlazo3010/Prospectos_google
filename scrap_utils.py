@@ -93,7 +93,7 @@ def scrapear_busqueda(busqueda: str, api_key: str, detallado=True) -> pd.DataFra
         comentarios = []
         gallery_images = []
 
-         if detallado and link:
+        if detallado and link:
             try:
                 driver.execute_script("window.open('');")
                 driver.switch_to.window(driver.window_handles[1])
