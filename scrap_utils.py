@@ -114,12 +114,11 @@ def scrapear_busqueda(busqueda: str, api_key: str, detallado=True) -> pd.DataFra
                     plus_code = plus_tag.text.strip()
                     lat, lng = plus_code_to_coords(plus_code, api_key)
 
-                # Teléfono (forma más general)
-                all_buttons = profile_soup.find_all("button")
-                for btn in all_buttons:
-                    if btn.has_attr('aria-label') and "Teléfono" in btn['aria-label']:
-                        phone = btn['aria-label'].replace("Teléfono: ", "").strip()
-                        break
+                # Buscar teléfono como texto en todo el HTML
+                raw_text = profile_soup.get_text()
+                phone_match = re.search(r"(\\+?\\d{2,3}\\s?\\(?\\d+\\)?[\\s.-]?\\d+[\\s.-]?\\d+)", raw_text)
+                if phone_match:
+                    phone = phone_match.group(0)
 
                 rating_tag = profile_soup.find("div", {"class": "F7nice"})
                 if rating_tag:
