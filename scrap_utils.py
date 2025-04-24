@@ -103,11 +103,6 @@ def scrapear_busqueda(busqueda: str, api_key: str, detallado=True) -> pd.DataFra
                     EC.presence_of_element_located((By.TAG_NAME, "body"))
                 )
 
-                # Guarda el HTML en un archivo temporal para inspección
-                with open(f"profile_html_debug_{idx+1}.html", "w", encoding="utf-8") as f:
-                    f.write(driver.page_source)
-                print(f"📄 HTML del perfil guardado como: profile_html_debug_{idx+1}.html")
-
                 profile_soup = BeautifulSoup(driver.page_source, 'html.parser')
 
                 address_tag = profile_soup.find("button", {"data-item-id": "address"})
