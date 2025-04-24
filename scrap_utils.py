@@ -115,11 +115,14 @@ def scrapear_busqueda(busqueda: str, api_key: str, detallado=True) -> pd.DataFra
                     lat, lng = plus_code_to_coords(plus_code, api_key)
 
                 # Teléfono (forma más general)
-                all_buttons = profile_soup.find_all("button")
-                for btn in all_buttons:
-                    if btn.has_attr('aria-label') and "Teléfono" in btn['aria-label']:
-                        phone = btn['aria-label'].replace("Teléfono: ", "").strip()
-                        break
+                try:
+                    phone_tags = profile_soup.find_all("button", class_="CsEnBe")
+                    for tag in phone_tags:
+                        if 'aria-label' in tag.attrs and "Teléfono" in tag['aria-label']:
+                            phone = tag['aria-label'].replace("Teléfono: ", "").strip()
+                            break
+                except:
+                    pass
 
                 rating_tag = profile_soup.find("div", {"class": "F7nice"})
                 if rating_tag:
@@ -128,6 +131,43 @@ def scrapear_busqueda(busqueda: str, api_key: str, detallado=True) -> pd.DataFra
                 review_count_tag = profile_soup.find("span", {"class": "UY7F9"})
                 if review_count_tag:
                     reviews = review_count_tag.text.strip().strip("()")
+
+                comentarios_contenedores = driver.find_elements(By.XPATH, '//div[@class="jftiEf fontBodyMedium "]')
+                for contenedor in comentarios_contenedores:
+                    try:
+                        autor = contenedor.find_element(By.XPATH, './/div[@class="d4r55 "]').text
+                    except:
+                        autor = None
+                    try:
+                        perfil = contenedor.find_element(By.XPATH, './/div[@class="RfnDt "]').text
+                    except:
+                        perfil = None
+                    try:
+                        estrellas = len(contenedor.find_elements(By.XPATH, './/span[@class="hCCjke google-symbols NhBTye elGi1d"]'))
+                    except:
+                        estrellas = None
+                    try:
+                        fecha = contenedor.find_element(By.XPATH, './/span[@class="rsqaWe"]').text
+                    except:
+                        fecha = None
+                    try:
+                        texto = contenedor.find_element(By.XPATH, './/div[contains(@class,"MyEned")]/span').text
+                    except:
+                        texto = None
+                    try:
+                        likes = contenedor.find_element(By.XPATH, './/span[@class="pkWtMe"]').text
+                    except:
+                        likes = "0"
+
+                    comentario = {
+                        "autor": autor,
+                        "perfil": perfil,
+                        "estrellas": estrellas,
+                        "fecha": fecha,
+                        "texto": texto,
+                        "likes": likes
+                    }
+                    comentarios.append(comentario)
 
                 images = profile_soup.find_all("img")
                 gallery_images = list(set(img['src'] for img in images if 'googleusercontent' in img.get('src', '') and img['src'] != image_url))
@@ -149,6 +189,7 @@ def scrapear_busqueda(busqueda: str, api_key: str, detallado=True) -> pd.DataFra
             "Teléfono": phone,
             "Calificación": rating,
             "Opiniones": reviews,
+            "Comentarios": json.dumps(comentarios, ensure_ascii=False),
             "Plus Code": plus_code.replace("\uf186", ""),
             "Latitud": lat,
             "Longitud": lng,
