@@ -93,15 +93,19 @@ def scrapear_busqueda(busqueda: str, api_key: str, detallado=True) -> pd.DataFra
         comentarios = []
         gallery_images = []
 
-        if detallado and link:
+        if idx == 0 and detallado and link:  # Solo el primer resultado
             try:
                 driver.execute_script("window.open('');")
                 driver.switch_to.window(driver.window_handles[1])
                 driver.get(link)
-
                 WebDriverWait(driver, 10).until(
                     EC.presence_of_element_located((By.TAG_NAME, "body"))
                 )
+    
+                # Guardar el HTML completo del perfil
+                with open("perfil_debug.html", "w", encoding="utf-8") as f:
+                    f.write(driver.page_source)
+                print("📄 HTML guardado como perfil_debug.html")
 
                 profile_soup = BeautifulSoup(driver.page_source, 'html.parser')
 
